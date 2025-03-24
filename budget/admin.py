@@ -6,14 +6,16 @@
 from django.contrib import admin
 from .models import Category, Transaction
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'user')  # Поля, которые будут отображаться в списке
-    list_filter = ('user',)  # Фильтр по пользователю
-    search_fields = ('name',)  # Поиск по названию
+    list_display = ("id", "name", "user")  # Поля, которые будут отображаться в списке
+    list_filter = ("user",)  # Фильтр по пользователю
+    search_fields = ("name",)  # Поиск по названию
+
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'amount', 'category', 'type', 'date')
-    list_filter = ('user', 'type', 'category')
-    search_fields = ('description',)
+    list_display = ("id", "user", "amount", "category", "type", "date", "description")
+    list_filter = ("user", "type", "category")
+    search_fields = ("description",)
