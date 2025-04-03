@@ -41,12 +41,17 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'budget',
+    'django_extensions'
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        # Другие renderers
+    ]
 }
 
 from datetime import timedelta
