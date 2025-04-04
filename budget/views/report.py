@@ -1,9 +1,7 @@
 import logging
 from datetime import datetime
 
-from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.views import APIView
 
 from budget.models import Transaction
@@ -17,8 +15,6 @@ from budget.utils.excel_report_generator import generate_test_excel
 
 class CategoryReportView(APIView):
     permission_classes = [IsAuthenticated]
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]  # Явно указываем renderers
-    parser_classes = [JSONParser]
 
     def get(self, request):
         logger.info("Запрос получен. Параметры: %s", request.query_params)
