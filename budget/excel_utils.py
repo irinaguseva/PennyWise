@@ -1,51 +1,49 @@
+# budget/excel_utils.py
+import openpyxl
+from openpyxl.styles import Font
 from io import BytesIO
-from reportlab.lib import colors, pdfencrypt
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
 
 
-def generate_category_report_pdf(report_data):
-    # 1. Создаем буфер и настраиваем метаданные PDF
-    buffer = BytesIO()
-
-    # --- Добавляем эту часть ---
-    enc = pdfencrypt.StandardEncryption("", canPrint=1, canModify=1)
-    doc = SimpleDocTemplate(
-        buffer,
-        pagesize=letter,
-        title="Financial Report",
-        author="PennyWise",
-        encrypt=enc  # Опционально (можно удалить, если защита не нужна)
-    )
-    # --------------------------
-
-    # 2. Создаем элементы PDF (заголовки, таблицы)
-    styles = getSampleStyleSheet()
-    elements = []
+def generate_category_report_excel(report_data):
+    """Генерация Excel-отчёта"""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Financial Report"
 
     # Заголовок
-    elements.append(Paragraph("Financial Report", styles['Title']))
+    ws['A1'] = "Financial Report"
+    ws['A1'].font = Font(bold=True, size=14)
 
-    # Таблица с данными
-    data = [["Category", "Income", "Expense", "Balance"]]
+    # Период отчёта
+    ws['A2'] = f"Period: {report_data['period']['start']} to {report_data['period']['end']}"
+
+    # Шапка таблицы
+    headers = ["Category", "Income", "Expense", "Balance"]
+    ws.append(headers)
+
+    # Данные
     for category, values in report_data['categories'].items():
-        data.append([
+        ws.append([
             category,
-            f"${values['income']:.2f}",
-            f"${values['expense']:.2f}",
-            f"${values['income'] - values['expense']:.2f}"
+            values['income'],
+            values['expense'],
+            values['income'] - values['expense']
         ])
 
-    table = Table(data)
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ]))
+    # Итоги
+    ws.append([
+        "TOTAL",
+        report_data['total']['income'],
+        report_data['total']['expense'],
+        report_data['total']['balance']
+    ])
 
-    elements.append(table)
+    # Форматирование
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
 
-    # 3. Генерируем PDF
-    doc.build(elements)
+    # Сохранение в буфер
+    buffer = BytesIO()
+    wb.save(buffer)
     buffer.seek(0)
     return buffer
