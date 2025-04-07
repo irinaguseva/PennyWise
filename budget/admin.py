@@ -9,9 +9,9 @@ from .models import Category, Transaction
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "user")  # Поля, которые будут отображаться в списке
-    list_filter = ("user",)  # Фильтр по пользователю
-    search_fields = ("name",)  # Поиск по названию
+    list_display = ("id", "name", "user")
+    list_filter = ("user",)
+    search_fields = ("name",)
 
 
 @admin.register(Transaction)
