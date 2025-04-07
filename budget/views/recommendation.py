@@ -14,6 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 from budget.models import Category, Transaction
+from secrets import giga_secret
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +30,6 @@ class FinancialRecommendationView(APIView):
                     {"error": "Authentication credentials were not provided."},
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
-
-            # Остальной код view...
 
         except InvalidToken as e:
             return Response(
@@ -77,15 +76,12 @@ class FinancialRecommendationView(APIView):
             {
                 "question": user_question,
                 "financial_data": financial_data,
-                "recommendation": ai_recommendation,  # ai_recommendation["recommendation"][0][1]
+                "recommendation": ai_recommendation,
             }
         )
 
     def _get_user_financial_data(self, user, start_date, end_date):
-        # end_date = datetime.now().date()
-        # start_date = end_date - timedelta(days=90)  # Данные за последние 30 дней
 
-        # Получаем баланс
         income = (
             Transaction.objects.filter(
                 user=user,
@@ -108,7 +104,6 @@ class FinancialRecommendationView(APIView):
 
         balance = income - expenses
 
-        # Получаем расходы по категориям
         categories = Category.objects.filter(user=user)
         category_expenses = []
 
@@ -149,7 +144,6 @@ class FinancialRecommendationView(APIView):
         }
 
     def _build_ai_prompt(self, financial_data, question):
-        """Формируем промпт для AI"""
         return f"""
         Ты финансовый помощник. Пользователь спрашивает: "{question}".
 
@@ -167,8 +161,7 @@ class FinancialRecommendationView(APIView):
 
     def _get_gigachat_recommendation(self, prompt):
         giga = GigaChat(
-            # Для авторизации запросов используйте ключ, полученный в проекте GigaChat API
-            credentials="N2E0N2NlMDAtMTZjYy00ZGI2LTllYTUtYzQwNTVkNjA0ZjRkOjdiN2I4ZmIzLTc4MWQtNGVlYS1iZjBhLTA3ZjNjMWYyMmI4YQ==",
+            credentials=giga_secret,
             verify_ssl_certs=False,
         )
 
@@ -177,33 +170,3 @@ class FinancialRecommendationView(APIView):
         messages.append(HumanMessage(content="Каковы мои расходы?"))
         res = giga.invoke(messages)
         return list(res)[0][1].replace("\n", "")
-
-    def _get_ai_recommendation(self, prompt):
-        """Получаем ответ от DeepSeek API"""
-        try:
-            # Имитация запроса к API (замените на реальный вызов API)
-            # Пример для DeepSeek API (проверьте актуальный API на их сайте)
-            response = requests.post(
-                "https://api.deepseek.com/v1/chat/completions",
-                headers={
-                    "Authorization": "Bearer sk-4819b728150d4891a33da240e615931e",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "model": "deepseek-chat",
-                    "messages": [{"role": "user", "content": prompt}],
-                    "temperature": 0.7,
-                },
-            )
-
-            if response.status_code == 200:
-                return (
-                    response.json()
-                    .get("choices", [{}])[0]
-                    .get("message", {})
-                    .get("content", "")
-                )
-            else:
-                return "Не удалось получить рекомендации. Пожалуйста, попробуйте позже."
-        except Exception as e:
-            return f"Ошибка при получении рекомендаций: {str(e)}"
