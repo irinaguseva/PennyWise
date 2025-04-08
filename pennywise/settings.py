@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django_extensions',
     #ours
     'budget',
+    'users',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
