@@ -1,11 +1,7 @@
-import json
 import logging
 from datetime import datetime, timedelta
 
-import requests
 from django.db.models import Sum
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_gigachat.chat_models import GigaChat
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,7 +10,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 from budget.models import Category, Transaction
-from secrets import giga_secret
+
+from ..services.ai_service import AIService
 
 logger = logging.getLogger(__name__)
 
@@ -66,9 +63,8 @@ class FinancialRecommendationView(APIView):
         financial_data = self._get_user_financial_data(
             request.user, start_date, end_date
         )
-        prompt = self._build_ai_prompt(financial_data, user_question)
 
-        ai_recommendation = self._get_gigachat_recommendation(prompt)
+        ai_recommendation = AIService().get_recommendation(financial_data, user_question)
 
         logger.info(f"{ai_recommendation}")
 
@@ -142,31 +138,3 @@ class FinancialRecommendationView(APIView):
                 "end_date": end_date.strftime("%Y-%m-%d"),
             },
         }
-
-    def _build_ai_prompt(self, financial_data, question):
-        return f"""
-        Ты финансовый помощник. Пользователь спрашивает: "{question}".
-
-        Вот финансовая информация пользователя:
-        - Текущий баланс: {financial_data['balance']} руб.
-        - Доходы за период: {financial_data['income']} руб.
-        - Расходы за период: {financial_data['expenses']} руб.
-
-        Основные категории расходов:
-        {', '.join([f"{cat['category']} ({cat['percentage']:.1f}%)" for cat in financial_data['category_expenses']])}
-
-        Дай конкретные рекомендации на русском языке, основанные на этих данных. 
-        Будь дружелюбным и профессиональным. Если нужно сократить расходы, предложи конкретные категории.
-        """
-
-    def _get_gigachat_recommendation(self, prompt):
-        giga = GigaChat(
-            credentials=giga_secret,
-            verify_ssl_certs=False,
-        )
-
-        messages = [SystemMessage(content=prompt)]
-
-        messages.append(HumanMessage(content="Каковы мои расходы?"))
-        res = giga.invoke(messages)
-        return list(res)[0][1].replace("\n", "")
