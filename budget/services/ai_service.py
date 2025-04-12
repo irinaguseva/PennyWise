@@ -1,10 +1,12 @@
 import logging
-from secrets import token
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_gigachat.chat_models import GigaChat
 
+from secret import token
+
 logger = logging.getLogger(__name__)
+
 
 class AIService:
     def __init__(self):
@@ -43,4 +45,3 @@ class AIService:
             return "Не удалось получить рекомендации. Пожалуйста, попробуйте позже."
 
         return list(res)[0][1].replace("\n", "")
-
