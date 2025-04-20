@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 from ..services.ai_service import AIService
 from ..utils.get_financial_data import get_user_financial_data
-
+#from ..metrics import AI_RECOMMENDATION_REQUESTS, AI_RECOMMENDATION_LATENCY, ERROR_COUNTER
 logger = logging.getLogger(__name__)
 
 
@@ -42,6 +42,7 @@ class FinancialRecommendationView(APIView):
         user_question = request.query_params.get("question")
 
         if not user_question:
+           # ERROR_COUNTER.labels('missing_question', 'FinancialRecommendationView').inc()
             return Response(
                 {"error": "Question parameter is required"},
                 status=status.HTTP_400_BAD_REQUEST,

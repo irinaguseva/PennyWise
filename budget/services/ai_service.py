@@ -3,16 +3,16 @@ import logging
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_gigachat.chat_models import GigaChat
 
-from secret import token
-
+#from secret import token
+from .prompt_builder import AIPromptBuilder
 logger = logging.getLogger(__name__)
 
 
 class AIService:
     def __init__(self):
-        self.token = token
+        self.token = 'N2E0N2NlMDAtMTZjYy00ZGI2LTllYTUtYzQwNTVkNjA0ZjRkOjdiN2I4ZmIzLTc4MWQtNGVlYS1iZjBhLTA3ZjNjMWYyMmI4YQ=='
 
-    def build_prompt(selfself, financial_data, question):
+    def build_prompt(self, financial_data, question):
         return f"""
                 Ты финансовый помощник. Пользователь спрашивает: "{question}".
 
@@ -26,6 +26,8 @@ class AIService:
 
                 Дай конкретные рекомендации на русском языке, основанные на этих данных. 
                 Будь дружелюбным и профессиональным. Если нужно сократить расходы, предложи конкретные категории.
+                
+                Напоминаю, вот вопрос: {question}
                 """
 
     def get_recommendation(self, financial_data, question):
@@ -33,10 +35,11 @@ class AIService:
             credentials=self.token,
             verify_ssl_certs=False,
         )
-        prompt = self.build_prompt(financial_data, question)
+        #prompt = self.build_prompt(financial_data, question)
+        prompt = AIPromptBuilder.build_financial_advise_prompt(financial_data, question)
 
         messages = [SystemMessage(content=prompt)]
-        messages.append(HumanMessage(content="Каковы мои расходы?"))
+        messages.append(HumanMessage(content=question))
 
         try:
             res = giga.invoke(messages)
