@@ -1,6 +1,7 @@
 from django.db.models import Sum
 
-from ..models import Category, Transaction
+from categories.models import Category
+from transactions.models import Transaction
 
 
 def get_user_financial_data(user, start_date, end_date):

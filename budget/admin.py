@@ -4,7 +4,8 @@
 # admin.site.register(User, UserAdmin)
 
 from django.contrib import admin
-from .models import Category, Transaction
+from categories.models import Category
+from transactions.models import Transaction
 
 
 @admin.register(Category)

@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_prometheus',
     #ours
-    'budget',
     'users',
+    'categories.apps.CategoriesConfig',
+    'transactions.apps.TransactionsConfig',
+    'budget.apps.BudgetConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'

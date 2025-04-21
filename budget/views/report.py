@@ -4,7 +4,7 @@ from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from budget.models import Transaction
+from transactions.models import Transaction
 
 logger = logging.getLogger(__name__)
 
