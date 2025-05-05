@@ -56,7 +56,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        # Другие renderers
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ]
 }
 
@@ -85,7 +85,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'budget/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

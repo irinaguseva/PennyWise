@@ -55,6 +55,7 @@ def generate_test_excel(report_data):
 
     output_dir = "reports"
     os.makedirs(output_dir, exist_ok=True)
-    filepath = os.path.join(output_dir, "test_report.xlsx")
+    filepath = os.path.join(output_dir, "test_reportIRA12.xlsx")
     wb.save(filepath)
     print(f"Файл успешно сохранен: {os.path.abspath(filepath)}")
+    return filepath
