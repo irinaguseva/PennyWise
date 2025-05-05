@@ -3,7 +3,8 @@ from .transaction import TransactionViewSet
 from .balance import BalanceView
 from .total import CategoryTotalView
 from .report import CategoryReportView
-from.recommendation import FinancialRecommendationView
+from .report_download import ReportDownloadView
+from .recommendation import FinancialRecommendationView
 
 
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     'BalanceView',
     'CategoryTotalView',
     'CategoryReportView',
-    'FinancialRecommendationView'
+    'FinancialRecommendationView',
+    'ReportDownloadView'
 ]
