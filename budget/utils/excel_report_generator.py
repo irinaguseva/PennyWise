@@ -3,6 +3,8 @@ import os
 import openpyxl
 from openpyxl.styles import Font
 
+from .CONF import generate_report_filename
+
 
 def generate_test_excel(report_data):
     wb = openpyxl.Workbook()
@@ -55,7 +57,7 @@ def generate_test_excel(report_data):
 
     output_dir = "reports"
     os.makedirs(output_dir, exist_ok=True)
-    filepath = os.path.join(output_dir, "test_reportIRA12.xlsx")
+    filepath = os.path.join(output_dir, generate_report_filename("report_table"))
     wb.save(filepath)
     print(f"Файл успешно сохранен: {os.path.abspath(filepath)}")
     return filepath
