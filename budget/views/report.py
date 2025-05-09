@@ -29,9 +29,12 @@ class CategoryReportView(APIView):
         if format_type == "excel" and plot_type == "table":
             generate_test_excel(report_data)
         elif format_type == "excel" and plot_type == "pie":
-            data = [("Type of Expense", "Amount Spent")]
+            income_data = [("Type of Income", "Amount Received")]
             for cat in report_data["categories"]:
-                data.append((cat, int(report_data["categories"][cat]["expense"])))
-            generate_excel_with_pie_chart(data)
+                income_data.append((cat, int(report_data["categories"][cat]["income"])))
+            expense_data = [("Type of Expense", "Amount Spent")]
+            for cat in report_data["categories"]:
+                expense_data.append((cat, int(report_data["categories"][cat]["expense"])))
+            generate_excel_with_pie_chart(income_data, expense_data)
 
         return Response(report_data)
