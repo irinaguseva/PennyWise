@@ -2,7 +2,7 @@ from django.http import FileResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from budget.utils.excel_report_generator import generate_test_excel
+from budget.utils.excel_report_generator import generate_excel_report
 from budget.utils.get_data_for_report import get_user_data_for_report
 
 
@@ -15,7 +15,7 @@ class ReportDownloadView(APIView):
 
         report_data = get_user_data_for_report(start_date_str, end_date_str, request.user)
 
-        file_path = generate_test_excel(report_data)
+        file_path = generate_excel_report(report_data)
 
         response = FileResponse(
         open(file_path, 'rb'),

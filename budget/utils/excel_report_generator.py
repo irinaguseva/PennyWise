@@ -6,7 +6,7 @@ from openpyxl.styles import Font
 from .CONF import generate_report_filename
 
 
-def generate_test_excel(report_data):
+def generate_excel_report(report_data):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Financial Report"
