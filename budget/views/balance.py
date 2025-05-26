@@ -13,19 +13,15 @@ class BalanceView(APIView):
     def get(self, request):
         user = request.user
 
-        total_income = (
-            Transaction.objects.filter(user=user, type="income").aggregate(
-                Sum("amount")
-            )["amount__sum"]
-            or 0
-        )
+        def get_total_by_type(user, tx_type):
+            return (
+                    Transaction.objects.filter(user=user, type=tx_type)
+                    .aggregate(total=Sum("amount"))
+                    .get("total") or 0
+            )
 
-        total_expense = (
-            Transaction.objects.filter(user=user, type="expense").aggregate(
-                Sum("amount")
-            )["amount__sum"]
-            or 0
-        )
+        total_income = get_total_by_type(user=user, tx_type="income")
+        total_expense = get_total_by_type(user=user, tx_type="expense")
 
         balance = total_income - total_expense
 
