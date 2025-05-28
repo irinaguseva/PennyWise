@@ -6,11 +6,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.exceptions import InvalidToken
 
-from ..services.ai_service import AIService
+#from ..services.ai_service import AIService
+# TODO: remove PennyWise\budget\services
+from budget.views.tools.ai_service import AIService
 from ..utils.get_financial_data import get_user_financial_data
-#from ..metrics import AI_RECOMMENDATION_REQUESTS, AI_RECOMMENDATION_LATENCY, ERROR_COUNTER
 logger = logging.getLogger(__name__)
 
 
