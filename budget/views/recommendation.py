@@ -48,7 +48,7 @@ class FinancialRecommendationView(APIView):
                 {"error": "Question parameter is required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        # TODO refactor this somehow
         start_date = (
             datetime.strptime(start_date, "%Y-%m-%d").date()
             if start_date
