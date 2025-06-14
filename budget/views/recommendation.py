@@ -43,7 +43,6 @@ class FinancialRecommendationView(APIView):
         user_question = request.query_params.get("question")
 
         if not user_question:
-           # ERROR_COUNTER.labels('missing_question', 'FinancialRecommendationView').inc()
             return Response(
                 {"error": "Question parameter is required"},
                 status=status.HTTP_400_BAD_REQUEST,
