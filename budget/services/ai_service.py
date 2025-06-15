@@ -1,15 +1,20 @@
 import logging
+import os
 
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_gigachat.chat_models import GigaChat
 
 from .prompt_builder import AIPromptBuilder
+
+
 logger = logging.getLogger(__name__)
+load_dotenv()
 
 
 class AIService:
     def __init__(self):
-        self.token = 'N2E0N2NlMDAtMTZjYy00ZGI2LTllYTUtYzQwNTVkNjA0ZjRkOjdiN2I4ZmIzLTc4MWQtNGVlYS1iZjBhLTA3ZjNjMWYyMmI4YQ=='
+        self.token = os.getenv("AI_TOKEN")
 
     def get_recommendation(self, financial_data, question):
         giga = GigaChat(
