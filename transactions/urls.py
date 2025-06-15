@@ -2,8 +2,8 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from budget.views import (BalanceView, CategoryReportView,
-                          FinancialRecommendationView, ReportDownloadView,
-                          TransactionViewSet)
+                          FinancialRecommendationView, ReportDownloadView)
+from .views.transaction import TransactionViewSet
 
 router = DefaultRouter()
 router.register(r"", TransactionViewSet, basename="transaction")
