@@ -30,7 +30,12 @@ class Command(BaseCommand):
         user = User.objects.get(username=username)
         if not amount:
             amount = random.uniform(1, 2500)
-        category, created = Category.objects.get_or_create(name=category_name)
+
+        category, created = Category.objects.get_or_create(
+            name=category_name,
+            user=user,
+            defaults={'user': user}
+        )
         year, month, day = datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day
         Transaction.objects.create(
             user=user,
