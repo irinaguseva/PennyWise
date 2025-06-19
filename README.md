@@ -5,15 +5,14 @@
 * получать отчёты по каждой категории за выбранный период;
 * запрашивать индивидуальную рекомендацию от AI, основанную на ваших доходах и расходах.
 
-##### Основные ручки
-
+##### Инструкция по локальному запуску проекта
+```
 docker-compose build
 docker-compose up
-
 docker-compose exec web python manage.py makemigration
 docker-compose exec web python manage.py migrate
-
 docker-compose exec web python manage.py createsuperuser
+```
 
 Сваггер доступен по ссылке http://127.0.0.1:8000/swagger/
 
